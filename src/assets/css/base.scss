@@ -1,0 +1,31 @@
+.clearfix {
+  display: inline-block;
+  &:after {
+    display: block;
+    content: ".";
+    height: 0;
+    line-height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+}
+
+.red{
+  color: #ff0000;
+}
+.green{
+  color: #229a25;
+}
+.bold{
+  font-weight: bold;
+}
+.container{
+  padding-bottom: 1rem;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0;
+}
