@@ -29,9 +29,9 @@
       </div>
     </div>-->
 
-    <div class="btn-wrap">
+    <!--<div class="btn-wrap">
       <div class="delete-btn" @click='deleteShow = true'>删除患者信息</div>
-    </div>
+    </div>-->
 
     <div v-transfer-dom>
       <confirm class="deleteMask" v-model="deleteShow" title="确认删除患者信息吗？" @on-confirm="sureDelete">

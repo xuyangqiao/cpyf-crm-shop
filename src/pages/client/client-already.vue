@@ -2,8 +2,8 @@
   <div class="client-section">
     <client-item v-for="(item, index) in list" :key='item.id' :item='item'></client-item>
     <div>
-      <load-more v-if="isLoading" :show-loading="true" tip='正在加载' background-color="#f0f0f0"></load-more>
-      <load-more v-if="!isLoading" :show-loading="false" tip='暂无更多数据' background-color="#f0f0f0"></load-more>
+      <load-more v-if="isLoading" :show-loading="true" tip='正在加载' background-color="#e7e7e7"></load-more>
+      <load-more v-if="!isLoading" :show-loading="false" tip='暂无更多数据' background-color="#e7e7e7"></load-more>
     </div>
   </div>
 </template>

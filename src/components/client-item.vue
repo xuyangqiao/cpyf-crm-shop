@@ -4,7 +4,6 @@
       <div class="name">{{item.name}}</div>
       <div class="phone">{{item.mobile}}</div>
       <div class="type already" v-if="item.reserve_status === 3">{{filterMoney}}</div>
-      <div class="type" v-else>未就诊</div>
       <x-icon type="ios-arrow-right" size="20"></x-icon>
     </router-link>
   </div>
@@ -16,7 +15,7 @@
     computed: {
       filterMoney () {
         if (this.item.reserve_status === 3 && !this.item.total) {
-          return '已就诊'
+          return '待核算'
         } else {
           return this.item.total + '元'
         }
@@ -35,7 +34,7 @@
       display: flex;
       align-items: center;
       .name{
-        min-width: 6em;
+        min-width: 8em;
         color: #2d2d2d;
         font-size: 0.3rem;
       }

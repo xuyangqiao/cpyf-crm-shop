@@ -3,7 +3,7 @@
   <div class="header">
     <tab v-model="selected">
       <tab-item @on-item-click="onItemClick(1)">全部患者</tab-item>
-      <tab-item @on-item-click="onItemClick(2)">已就诊患者</tab-item>
+      <tab-item @on-item-click="onItemClick(2)">已核算患者</tab-item>
     </tab>
   </div>
   <router-view></router-view>
