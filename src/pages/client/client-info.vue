@@ -8,10 +8,7 @@
       </div>
       <div class="client-sale">
         <div class="sale-item">
-          <span class="sale">业务员：{{data.sale_name}}</span>
           <span class="sale price">消费总计：<span class="red">{{data.total}}</span>元</span>
-        </div>
-        <div class="sale-item">
           <span class="sale-time">添加：{{data.customer_time}}</span>
         </div>
       </div>
@@ -29,9 +26,9 @@
       </div>
     </div>-->
 
-    <!--<div class="btn-wrap">
-      <div class="delete-btn" @click='deleteShow = true'>删除患者信息</div>
-    </div>-->
+    <div class="btn-wrap">
+      <div class="delete-btn" @click='goEdit'>编辑患者信息</div>
+    </div>
 
     <div v-transfer-dom>
       <confirm class="deleteMask" v-model="deleteShow" title="确认删除患者信息吗？" @on-confirm="sureDelete">
@@ -61,7 +58,7 @@ export default {
       let temp = []
       card = card + ''
       for (let i = 0; i < card.length; i++) {
-        if (i < 3 || i > 13) {
+        if (i < 4 || i > 13) {
           temp.push(card[i])
         } else {
           temp.push('*')
@@ -92,6 +89,9 @@ export default {
       if (code === 200 && data) {
         this.data = data
       }
+    },
+    goEdit () {
+      this.$router.push({path: '/', query: {isEdit: true, cid: this.$route.query.cid}})
     }
   },
   mounted () {
@@ -172,9 +172,6 @@ export default {
           font-size: 0.28rem;
           color: #888888;
           margin-bottom: 0.25rem;
-          &.price{
-            text-align: right;
-          }
         }
         .sale-time{
           font-size: 0.24rem;

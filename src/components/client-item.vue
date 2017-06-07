@@ -44,7 +44,6 @@
         font-size: 0.24rem;
       }
       .type{
-        margin-right: 0.62rem;
         color: #a3a3a3;
         font-size: 0.24rem;
         &.already{

@@ -1,40 +1,92 @@
 <template>
   <div class="container">
-    <div class="consumer-item">
-      <h2 class="item-title">2017-04-01 ~ 2017-04-10</h2>
-      <div class="item-content" v-for="i in 3">
+    <div class="consumer-item" v-for="(item, index) in filterData">
+      <h2 class="item-title">{{item.time}}</h2>
+      <div class="item-content" v-for="(items, index) in item.list">
         <div class="content-top">
           <div class="top-left vux-1px-r">
-            <h2 class="name">李四</h2>
-            <p class="client"><span class="title">业务员：</span> 刘杨</p>
+            <h2 class="name">{{items.name}}</h2>
+            <p class="client">{{items.mobile}}</p>
           </div>
           <div class="top-right">
-            <p class="price"><span class="title">总消费</span> <span class="red">5555</span>元</p>
-            <p class="price"><span class="title">应结算</span> <span class="red">5555</span>元</p>
+            <p class="price"><span class="title">消费额</span> <span class="red">{{items.total}}</span>元</p>
+            <p class="price"><span class="title">应结算</span> <span class="red">{{items.paycash}}</span>元</p>
           </div>
         </div>
-        <div class="content-bottom vux-1px-t">更新时间：2017-5-16 16:19</div>
+        <div class="content-bottom vux-1px-t">更新时间：{{items.edit_time}}</div>
       </div>
+    </div>
+    <div>
+      <load-more v-if="info && info.length <= 0" :show-loading="false" tip='暂无数据' background-color="#e7e7e7"></load-more>
     </div>
   </div>
 </template>
 
 <script>
-  
+import api from '@/api'
+import {LoadMore} from 'vux'
+export default{
+  components: {
+    LoadMore
+  },
+  data () {
+    return {
+      info: ''
+    }
+  },
+  async created () {
+    const {data: {code, data}} = await api.get('/Index/Total/lists')
+    if (code === 200) {
+      this.info = data
+    }
+  },
+  computed: {
+    filterData () {
+      let arr = this.info
+      let map = {}
+      let dest = []
+      for (let i = 0; i < arr.length; i++) {
+        let ai = arr[i]
+        let startTime = arr[i].start_time.split(' ')[0]
+        let endTime = arr[i].end_time.split(' ')[0]
+        let time = `${startTime} ~ ${endTime}`
+        if (!map[ai.start_end_time]) {
+          dest.push({
+            time: time,
+            list: [ai]
+          })
+          map[ai.start_end_time] = ai
+        } else {
+          for (var j = 0; j < dest.length; j++) {
+            var dj = dest[j]
+            if (dj.start_end_time === ai.start_end_time) {
+              dj.list.push(ai)
+              break
+            }
+          }
+        }
+      }
+      return dest
+    }
+  }
+}
+
 </script>
 
 <style lang="scss">
   .consumer-item{
+    margin-bottom: .3rem;
     .item-title{
-      padding: 0 0.3rem;
+      padding: 0.2rem 0.3rem;
       margin-top: 0.3rem;
       color: #2d2d2d;
       font-size: 0.3rem;
+      background: #f0f0f0;
     }
     .item-content{
       background: #fff;
       padding: 0.3rem 0 0;
-      margin-top: 0.2rem;
+      margin-bottom: 0.2rem;
       .content-top{
         display: flex;
         padding-bottom: 0.3rem;

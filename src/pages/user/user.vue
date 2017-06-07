@@ -18,7 +18,7 @@
         </router-link>
         <router-link to='/already' tag='div' class="count-item vux-1px-r">
           <h2 class="title">{{data.already}}位</h2>
-          <p class="text">已就诊患者</p>
+          <p class="text">已核算患者</p>
         </router-link>
         <!--<router-link to='/not' tag='div' class="count-item">
           <h2 class="title">3333元</h2>
@@ -30,7 +30,7 @@
     <!--功能列表-->
     <div class="menu">
       <div class="menu-group">
-        <!--<router-link to='/consumer' tag='div' class="menu-item">
+        <router-link to='/consumer' tag='div' class="menu-item">
           <div class="icon-wrap">
             <span class="menu-icon menu-recorde"></span>
           </div>
@@ -46,15 +46,15 @@
           <div class="icon-wrap">
             <span class="menu-icon menu-recorde"></span>
           </div>
-          <div class="item-content">
-            <h1 class="title">代扣税款</h1>
+          <div class="item-content vux-1px-b">
+            <h1 class="title">账户余额</h1>
             <div class="link">
               <x-icon type="ios-arrow-right" size="20"></x-icon>
             </div>
           </div>
-        </router-link>-->
+        </router-link>
 
-        <router-link to='/sale' tag='div' class="menu-item" v-if="data.level < 5">
+        <!--<router-link to='/sale' tag='div' class="menu-item" v-if="data.level < 5">
           <div class="icon-wrap">
             <span class="menu-icon menu-recorde"></span>
           </div>
@@ -65,7 +65,7 @@
               <x-icon type="ios-arrow-right" size="20"></x-icon>
             </div>
           </div>
-        </router-link>
+        </router-link>-->
       </div>
 
       <div class="menu-group">
@@ -96,7 +96,7 @@
           <div class="icon-wrap">
             <span class="menu-icon menu-recorde"></span>
           </div>
-          <div class="item-content vux-1px-b">
+          <div class="item-content">
             <h1 class="title">推广二维码</h1>
             <div class="link">
               <x-icon type="ios-arrow-right" size="20"></x-icon>
@@ -172,6 +172,10 @@
     .content{
       position: relative;
       margin-left: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      padding: 0.2rem 0;
+      justify-content: space-between;
       .name{
         color: #ffffff;
         font-size: 0.32rem;
@@ -181,7 +185,6 @@
         }
       }
       .title{
-        margin-top: 0.2rem;
         font-size: 0.26rem;
         color: #fff;
       }

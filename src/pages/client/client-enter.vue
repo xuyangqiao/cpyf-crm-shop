@@ -9,18 +9,22 @@
           </div>
         </x-input>
       </group>
+      <div v-if="$route.query.isEdit">
+        <group gutter='0'>
+          <!--<popup-picker title="性 别：" :columns="1" show-name :data="sexList" v-model="sexValue"></popup-picker>-->
+          <span class="title">性 别：</span>
+          <span class="sex-text" @click='sexShow = true'>{{sexMsg}}</span>
+        </group>
+        <group gutter='0'>
+          <x-input v-model="form.age" placeholder="请输入客户年龄" text-align='right' keyboard="number">
+            <div slot="label" class="label-title">
+              <span>年 龄：</span>
+            </div>
+          </x-input>
+        </group>
+      </div>
       <group gutter='0'>
-        <popup-picker title="性 别：" :columns="1" show-name :data="sexList" v-model="sexValue"></popup-picker>
-      </group>
-      <group gutter='0'>
-        <x-input v-model="form.age" placeholder="请输入客户年龄" text-align='right' keyboard="number">
-          <div slot="label" class="label-title">
-            <span>年 龄：</span>
-          </div>
-        </x-input>
-      </group>
-      <group gutter='0'>
-        <x-input v-model="form.mobile" placeholder="请输入手机号码" text-align='right' keyboard="number" is-type="china-mobile">
+        <x-input v-model="form.mobile" placeholder="请输入手机号码" text-align='right' :readonly='$route.query.isEdit' keyboard="number" is-type="china-mobile">
           <div slot="label" class="label-title">
             <span class="red">*</span>
             <span>手机号码：</span>
@@ -28,7 +32,7 @@
         </x-input>
       </group>
       <group gutter='0'>
-        <x-input v-model="form.card_number" placeholder="请输入身份证号" text-align='right' keyboard="number">
+        <x-input v-model="form.card_number" placeholder="请输入身份证号" :readonly='$route.query.isEdit' text-align='right' keyboard="number">
           <div slot="label" class="label-title">
             <span>身份证号：</span>
           </div>
@@ -38,11 +42,14 @@
     <div class="btn-wrap">
       <x-button action-type='button' @click.native='enterClient'>提交</x-button>
     </div>
+
+    <!-- 性别 -->
+    <actionsheet v-model="sexShow" :menus="sexMenu" show-cancel @on-click-menu="sexClick"></actionsheet>
   </div>
 </template>
 
 <script>
-  import { Group, XInput, PopupPicker, XButton } from 'vux'
+  import { Group, XInput, PopupPicker, XButton, Actionsheet } from 'vux'
   import api from '@/api'
   
   export default {
@@ -50,40 +57,50 @@
       Group,
       XInput,
       PopupPicker,
-      XButton
+      XButton,
+      Actionsheet
     },
     data () {
       return {
         value: '',
-        sexValue: ['0'],
         fetchIng: false,
-        sexList: [
-          {
-            name: '男',
-            value: '1',
-            parent: 0
-          },
-          {
-            name: '女',
-            value: '2',
-            parent: 0
-          }
-        ],
+        sexShow: false,
+        sexMenu: {
+          1: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">男</span>',
+          2: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">女</span>'
+        },
         form: {
           name: '',
-          sex: '',
+          sex: '0',
           age: '',
           mobile: '',
           card_number: ''
         }
       }
     },
-    watch: {
-      sexValue () {
-        this.form.sex = this.sexValue[0]
+    async created () {
+      const {data: {code, data}} = await api.get('/Index/Write/CustomerEdit', {id: this.$route.query.cid})
+      if (code === 200) {
+        this.form = data
+      }
+    },
+    computed: {
+      sexMsg () {
+        if (this.form.sex === '0') {
+          return '请选择性别'
+        } else if (this.form.sex === '1') {
+          return '男'
+        } else {
+          return '女'
+        }
       }
     },
     methods: {
+      sexClick (key) {
+        if (key !== 'cancel') {
+          this.form.sex = key
+        }
+      },
       async enterClient () {
         if (this.fetchIng) {
           return
@@ -97,10 +114,24 @@
           return
         }
         this.fetchIng = true
-        const {data: {code}} = await api.post('/Index/Write/AddUserinfo', this.form)
+        let obj = this.form
+        let url = '/Index/Write/AddUserinfo'
+        if (this.$route.query.isEdit) {
+          obj = Object.assign(obj, {id: this.$route.query.cid})
+          url = '/Index/Write/CustomerEdit'
+        }
+        const {data: {code, msg}} = await api.post(url, obj)
         if (code === 200) {
+          if (this.$route.query.isEdit) {
+            this.$router.go(-1)
+            return
+          }
           this.$router.push('/success')
         } else {
+          if (this.$route.query.isEdit) {
+            this.toast(msg)
+            return
+          }
           this.$router.push('/fail')
         }
         this.fetchIng = false
@@ -127,6 +158,11 @@
   .weui-cells{
     height: 0.88rem;
     line-height: 0.88rem;
+    .sex-text{
+      float: right;
+      width: 8em;
+      text-align: right;
+    }
   }
   .weui-cells:before{
     display: none;

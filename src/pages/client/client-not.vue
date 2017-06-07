@@ -54,7 +54,6 @@
     },
     mounted () {
       this.$wechat.ready(() => {
-        console.log(this.$store.userDefault.name)
         this.wechatShare({
           title: `${this.$store.state.userDefault.name}推荐您预约川派医方馆疼痛专家`,
           link: '/',

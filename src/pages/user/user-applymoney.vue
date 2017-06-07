@@ -2,8 +2,8 @@
   <div class="container apply-bg">
     <div class="apply-top">
       <div class="company-title">
-        <h2 class="title">功夫肩颈青羊店功夫肩功夫</h2>
-        <p class="update-time">2017.10.20  15:30:10  更新</p>
+        <h2 class="title">{{info.name}}</h2>
+        <p class="update-time">{{info.time}} 更新</p>
       </div>
 
       <div class="money-table">
@@ -13,9 +13,9 @@
           <div class="table-item">应结算/元</div>
         </div>
         <div class="table-body">
-          <div class="table-item vux-1px-r">23</div>
-          <div class="table-item vux-1px-r">44444</div>
-          <div class="table-item">578421</div>
+          <div class="table-item vux-1px-r">{{info.customer_total_count}}</div>
+          <div class="table-item vux-1px-r">{{info.total}}</div>
+          <div class="table-item">{{info.payment}}</div>
         </div>
       </div>
 
@@ -23,12 +23,12 @@
         <div class="table-head vux-1px-b">
           <div class="table-item vux-1px-r">已提现/元</div>
           <div class="table-item vux-1px-r">待提现/元</div>
-          <div class="table-item">税费及服务费/元</div>
+          <div class="table-item">税费/元</div>
         </div>
         <div class="table-body">
-          <div class="table-item vux-1px-r">23</div>
-          <div class="table-item vux-1px-r">44444</div>
-          <div class="table-item">578421</div>
+          <div class="table-item vux-1px-r">{{info.payalready}}</div>
+          <div class="table-item vux-1px-r">{{info.paysure}}</div>
+          <div class="table-item">{{info.paytax}}</div>
         </div>
       </div>
 
@@ -37,9 +37,9 @@
       </div>
     </div>
 
-    <div class="apply-form">
+    <div class="apply-form" v-if="info">
       <group gutter='0'>
-        <x-input v-model="form.money" placeholder="请输入申请提现金额" text-align='right'>
+        <x-input v-model.lazy="form.total" placeholder="请输入申请提现金额" text-align='right' type='number' @on-blur='changeMoney'>
           <div slot="label" class="label-title">
             <span class="red">*</span>
             <span>提现额度：</span>
@@ -51,30 +51,33 @@
         <span class="sex-text" @click='openShow = true'>{{openMsg}} <span class="arr"></span></span>
       </group>
       <!--开票选项-->
-      <div v-if='form.open === "1"'>
+      <div v-if='form.invoice === "1"'>
         <group gutter='0'>
           <span class="title"><span class="red">*</span> 发票寄送方式：</span>
           <span class="sex-text" @click='typeShow = true'>{{typeMsg}} <span class="arr"></span></span>
         </group>
+
+        <div v-if="form.send_mode === '1'">
+          <group gutter='0'>
+            <x-input v-model="form.send_name" placeholder="请输入快递名称" text-align='right' keyboard="text">
+              <div slot="label" class="label-title">
+                <span>快递名称：</span>
+              </div>
+            </x-input>
+          </group>
+          <group gutter='0'>
+            <x-input v-model="form.send_number" placeholder="请输入快递单号" text-align='right' keyboard="text">
+              <div slot="label" class="label-title">
+                <span>快递单号：</span>
+              </div>
+            </x-input>
+          </group>
+        </div>
         <group gutter='0'>
-          <x-input v-model="form.card_number" placeholder="请输入快递名称" text-align='right' keyboard="text">
-            <div slot="label" class="label-title">
-              <span>快递名称：</span>
-            </div>
-          </x-input>
-        </group>
-        <group gutter='0'>
-          <x-input v-model="form.card_number" placeholder="请输入快递单号" text-align='right' keyboard="text">
-            <div slot="label" class="label-title">
-              <span>快递单号：</span>
-            </div>
-          </x-input>
-        </group>
-        <group gutter='0'>
-          <x-textarea :max="200" placeholder="备注" :show-counter="false" :height="100" :rows="8" :cols="30"></x-textarea>
+          <x-textarea :max="200" v-model="form.desc" placeholder="备注" :show-counter="false" :height="100" :rows="8" :cols="30"></x-textarea>
         </group>
       </div>
-      <div v-else>
+      <div v-if='form.invoice === "2"'>
         <group gutter='0' class="flex-wrap">
           <span class="title"><span class="red">*</span> 代扣税款：</span>
           <span class="sex-text">{{money}}元</span>
@@ -84,9 +87,19 @@
           <span class="sex-text">{{realMoney}}元</span>
         </group>
       </div>
+      <div v-if='form.invoice === "3"'>
+        <group gutter='0' class="flex-wrap">
+          <span class="title"><span class="red">*</span> 服务费：</span>
+          <span class="sex-text">{{money}}元</span>
+        </group>
+        <group gutter='0' class="flex-wrap">
+          <span class="title"><span class="red">*</span> 实际到账：</span>
+          <span class="sex-text">{{realMoney}}元</span>
+        </group>
+      </div>
     </div>
     <div class="btn-wrap">
-      <x-button action-type='button'>申 请</x-button>
+      <x-button action-type='button' @click.native='applyMoney'>申 请</x-button>
     </div>
 
     <div class="record">
@@ -95,10 +108,12 @@
       </div>
 
       <div class="record-box">
-        <div class="record-item" v-for="i in 3">
-          <span class="time">2017-05-12 14:30:25</span>
-          <span class="type">实际到账</span>
-          <span class="type">5000元</span>
+        <div class="record-item" v-for="(item, index) in info.ApplyList">
+          <span class="time">{{item.edit_time}}</span>
+          <span class="type" v-if="item.status === '0'">申请提现</span>
+          <span class="type" v-else-if="item.status === '1'">实际到账</span>
+          <span class="type" v-else>已驳回</span>
+          <span class="price">{{item.paycash}}元</span>
         </div>
       </div>
     </div>
@@ -112,7 +127,7 @@
 
 <script>
   import { Cell, Group, XInput, XButton, Confirm, TransferDomDirective as TransferDom, Actionsheet, XTextarea } from 'vux'
-  
+  import api from '@/api'
   export default {
     directives: {
       TransferDom
@@ -128,64 +143,114 @@
     },
     data () {
       return {
+        info: '',
         openShow: false,
         typeShow: false,
         openMenu: {
-          1: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">开票</span>',
-          2: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">不开票</span>'
+          '1': '<span style="display:inline-block; height: .6rem; line-height: .6rem;">开票</span>',
+          '2': '<span style="display:inline-block; height: .6rem; line-height: .6rem;">不开票</span>'
         },
         typeMenu: {
           1: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">快递</span>',
-          2: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">亲自到院</span>'
+          2: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">同城配送或滴滴</span>',
+          3: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">亲自到院</span>',
+          4: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">其他</span>'
         },
         form: {
-          money: '',
-          open: '1',
-          type: '1',
-          name: '',
-          card: ''
+          total: '',
+          invoice: '1',
+          send_mode: '1',
+          send_name: '',
+          send_number: '',
+          desc: ''
         }
       }
     },
+    created () {
+      this.fetchData()
+    },
     computed: {
       openMsg () {
-        if (this.form.open === '1') {
+        if (this.form.invoice === '1') {
           return '开票'
-        } else {
+        } else if (this.form.invoice === '2') {
           return '不开票'
+        } else {
+          return '服务费'
         }
       },
       typeMsg () {
-        if (this.form.type === '1') {
+        if (this.form.send_mode === '1') {
           return '快递'
-        } else {
+        } else if (this.form.send_mode === '2') {
+          return '同城配送或滴滴'
+        } else if (this.form.send_mode === '3') {
           return '亲自到院'
+        } else if (this.form.send_mode === '4') {
+          return '其他'
         }
       },
       money () {
-        if (!isNaN(this.form.money) && this.form.money) {
-          return (parseFloat(this.form.money) * 0.2).toFixed(2)
+        let tax = 0
+        if (this.info.account_type === 1) {
+          tax = 0.25
+          if (!isNaN(this.form.total) && this.form.total) {
+            return (parseFloat(this.form.total) * tax).toFixed(2)
+          } else {
+            return 0
+          }
         } else {
-          return 0
+          if (this.form.invoice === '2') {
+            tax = 0.2
+          }
+          if (!isNaN(this.form.total) && this.form.total) {
+            return (parseFloat(this.form.total) * tax).toFixed(2)
+          } else {
+            return 0
+          }
         }
       },
       realMoney () {
-        if (!isNaN(this.form.money) && this.form.money) {
-          return (parseFloat(this.form.money) - parseFloat(this.form.money) * 0.2).toFixed(2)
+        if (!isNaN(this.form.total) && this.form.total) {
+          return (parseFloat(this.form.total) - this.money).toFixed(2)
         } else {
           return 0
         }
       }
     },
     methods: {
+      changeMoney () {
+        if (parseFloat(this.form.total, 10) >= this.info.paysure) {
+          this.form.total = this.info.paysure
+        }
+      },
       openClick (key) {
         if (key !== 'cancel') {
-          this.form.open = key
+          this.form.invoice = key
         }
       },
       typeClick (key) {
         if (key !== 'cancel') {
-          this.form.type = key
+          this.form.send_mode = key
+        }
+      },
+      async fetchData () {
+        const {data: {code, data}} = await api.get('/Index/Apply/add')
+        if (code === 200) {
+          this.info = data
+          this.form.total = data.paysure
+          // if (data.account_type === 2) {
+          //   this.openMenu['3'] = '<span style="display:inline-block; height: .6rem; line-height: .6rem;">服务费</span>'
+          // }
+        }
+      },
+      async applyMoney () {
+        const {data: {code, msg}} = await api.post('/Index/Apply/add', this.form)
+        if (code === 200) {
+          this.toast('申请成功')
+          this.fetchData()
+        } else {
+          this.toast(msg)
         }
       }
     }
@@ -251,8 +316,9 @@
   }
   .apply-title{
     color: #2d2d2d;
-    font-size: 0.26rem;
+    font-size: 0.34rem;
     margin-top: 0.6rem;
+    font-weight: bold;
   }
   .apply-form{
     margin-top: 0.2rem;
@@ -305,13 +371,20 @@
         height: 0.6rem;
         line-height: 0.6rem;
         display: flex;
-        justify-content: space-between;
         font-size: 0.26rem;
         color: #888888;
         border-bottom: 1px solid #e7e7e7;
       }
+      .price{
+        color: #2d2d2d;
+        text-align: right;
+        flex: 1;
+      }
       .type{
         color: #2d2d2d;
+        min-width: 6em;
+        text-align: center;
+        margin: 0 0.3rem;
       }
     }
   }
