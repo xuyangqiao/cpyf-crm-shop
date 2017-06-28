@@ -3,7 +3,7 @@
     <router-link :to='{path: "detail", query: {cid: item.id}}' class="item-content vux-1px-b">
       <div class="name">{{item.name}}</div>
       <div class="phone">{{item.mobile}}</div>
-      <div class="type already" v-if="item.reserve_status === 3">{{filterMoney}}</div>
+      <div class="type already" v-if="$store.state.userDefault.level !== 5">{{filterMoney}}</div>
       <x-icon type="ios-arrow-right" size="20"></x-icon>
     </router-link>
   </div>
@@ -17,6 +17,9 @@
         if (this.item.reserve_status === 3 && !this.item.total) {
           return '待核算'
         } else {
+          if (!this.item.total) {
+            return ''
+          }
           return this.item.total + '元'
         }
       }

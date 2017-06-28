@@ -40,9 +40,7 @@
       async fetchData () {
         this.busy = true   // 禁止加载，防止重复请求
         this.isLoading = true  // 开始加载动画
-        let option = this.page
-        option = Object.assign({reserve_status: 3}, this.nextPage)
-        const {data: {code, data}} = await api.get('/Index/Write/UsersList', option)
+        const {data: {code, data}} = await api.get('/Index/Write/FinanceUser', this.page)
         if (code === 200) {
           this.page ++
           this.list = this.list.concat(data)

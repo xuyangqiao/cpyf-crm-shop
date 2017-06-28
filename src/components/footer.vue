@@ -1,5 +1,5 @@
 <template>
-  <tabbar v-model="footerSelect">
+  <tabbar v-model="footerSelect" v-show="footerShow">
     <tabbar-item link="/">
       <img class="default" slot="icon" src="../assets/images/icon/footer-enter.png">
       <img class="active" slot="icon" src="../assets/images/icon/footer-enter-active.png">
@@ -10,7 +10,7 @@
       <img class="active" slot="icon" src="../assets/images/icon/footer-client-active.png">
       <span slot="label">患者</span>
     </tabbar-item>
-    <tabbar-item link="/doctorlist">
+    <tabbar-item link="/poster">
       <img class="default" slot="icon" src="../assets/images/icon/footer-share.png">
       <img class="active" slot="icon" src="../assets/images/icon/footer-share-active.png">
       <span slot="label">分享</span>
@@ -35,6 +35,9 @@
     computed: {
       footerSelect () {
         return this.$store.state.footerSelect
+      },
+      footerShow () {
+        return this.$store.state.footerShow
       }
     }
   }

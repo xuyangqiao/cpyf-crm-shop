@@ -8,12 +8,17 @@ const state = {
   userDefault: {
     agentId: '',
     name: ''
-  }
+  },
+  footerShow: true
 }
 
 const mutations = {
   footerSelect (state, select) {
     state.footerSelect = select
+  },
+  // 某些页面需要隐藏页脚
+  footerShow (state, flag) {
+    state.footerShow = flag
   },
   userDefault (state, data) {
     state.userDefault = data

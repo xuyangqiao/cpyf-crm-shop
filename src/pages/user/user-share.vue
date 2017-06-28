@@ -1,9 +1,9 @@
 <template>
 <div class="share-wrap">
   <div class="header">
-    <tab v-model="selected">
-      <tab-item @on-item-click="onItemClick(1)">专家团队</tab-item>
-      <tab-item @on-item-click="onItemClick(2)">推广二维码</tab-item>
+    <tab v-model="selected" :line-width='0'>
+      <tab-item @on-item-click="onItemClick(1)">分享海报</tab-item>
+      <!--<tab-item @on-item-click="onItemClick(2)">推广二维码</tab-item>-->
     </tab>
   </div>
   <router-view></router-view>
@@ -23,7 +23,7 @@
       }
     },
     beforeRouteUpdate (to, from, next) {
-      if (to.path === '/doctorlist') {
+      if (to.path === '/poster') {
         this.selected = 0
       } else {
         this.selected = 1
@@ -31,7 +31,7 @@
       next()
     },
     created () {
-      if (window.location.hash === '#/doctorlist') {
+      if (window.location.hash === '#/poster') {
         this.selected = 0
       } else {
         this.selected = 1
@@ -39,12 +39,9 @@
     },
     methods: {
       onItemClick (index) {
-        if (index === this.tabSelect) {
-          return
-        }
         this.tabSelect = index
         if (index === 1) {
-          this.$router.push('/doctorlist')
+          this.$router.push('/poster')
         } else {
           this.$router.push('/share')
         }
@@ -66,6 +63,8 @@
 <style lang="scss">
   .share-wrap{
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     // background: #fff;
   }
   .header{
@@ -76,21 +75,21 @@
         line-height: 1.06rem;
       }
     }
-    .vux-tab-ink-bar{
-      &:after{
-        content: '';
-        display: block;
-        position: absolute;
-        z-index: 2;
-        top: 0px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 0;
-        border-left: 7px solid transparent;
-        border-right: 7px solid transparent;
-        border-top: 7px solid #09bb07;
-      }
-    }
+    // .vux-tab-ink-bar{
+    //   &:after{
+    //     content: '';
+    //     display: block;
+    //     position: absolute;
+    //     z-index: 2;
+    //     top: 0px;
+    //     left: 50%;
+    //     transform: translateX(-50%);
+    //     width: 0;
+    //     height: 0;
+    //     border-left: 7px solid transparent;
+    //     border-right: 7px solid transparent;
+    //     border-top: 7px solid #09bb07;
+    //   }
+    // }
   }
 </style>

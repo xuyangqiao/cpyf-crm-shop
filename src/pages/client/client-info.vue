@@ -8,7 +8,7 @@
       </div>
       <div class="client-sale">
         <div class="sale-item">
-          <span class="sale price">消费总计：<span class="red">{{data.total}}</span>元</span>
+          <span class="sale price" v-if="$store.state.userDefault.level !== 5">消费总计：<span class="red">{{data.total}}</span>元</span>
           <span class="sale-time">添加：{{data.customer_time}}</span>
         </div>
       </div>

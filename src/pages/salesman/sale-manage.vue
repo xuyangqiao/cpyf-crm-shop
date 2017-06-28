@@ -1,6 +1,6 @@
 <template>
   <div class="container" v-infinite-scroll="fetchData" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
-    <router-link to='/newsale' tag='div' class="new-bar">
+    <router-link to='/newsale' tag='div' class="new-bar" v-if="DownLevel">
       <x-icon type="ios-plus-outline" size="20"></x-icon>
       <span class="title">添加业务员</span>
     </router-link>
@@ -49,7 +49,8 @@
         busy: true,
         page: 0,
         isLoading: false,
-        list: []
+        list: [],
+        DownLevel: ''
       }
     },
     filters: {
@@ -77,10 +78,11 @@
       async fetchData () {
         this.busy = true   // 禁止加载，防止重复请求
         this.isLoading = true  // 开始加载动画
-        const {data: {code, data}} = await api.get('/Index/Mycenter/MySale', this.nextPage)
+        const {data: {code, data, DownLevel}} = await api.get('/Index/Mycenter/MySale', this.nextPage)
         if (code === 200) {
           this.page ++
           this.list = this.list.concat(data)
+          this.DownLevel = DownLevel
           if (data.length < 20) {
             this.isLoading = false
             return

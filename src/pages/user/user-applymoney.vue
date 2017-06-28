@@ -73,9 +73,6 @@
             </x-input>
           </group>
         </div>
-        <group gutter='0'>
-          <x-textarea :max="200" v-model="form.desc" placeholder="备注" :show-counter="false" :height="100" :rows="8" :cols="30"></x-textarea>
-        </group>
       </div>
       <div v-if='form.invoice === "2"'>
         <group gutter='0' class="flex-wrap">
@@ -97,9 +94,13 @@
           <span class="sex-text">{{realMoney}}元</span>
         </group>
       </div>
+      <group gutter='0'>
+        <x-textarea :max="200" v-model="form.desc" placeholder="备注" :show-counter="false" :height="100" :rows="8" :cols="30"></x-textarea>
+      </group>
     </div>
     <div class="btn-wrap">
       <x-button action-type='button' @click.native='applyMoney'>申 请</x-button>
+      <p class="text" v-show="form.invoice === '2'">系统将按照{{info.proportion}}%代扣税款，税后所得，心安理得。</p>
     </div>
 
     <div class="record">
@@ -143,12 +144,14 @@
     },
     data () {
       return {
+        // account_type => 1 是对公
         info: '',
         openShow: false,
         typeShow: false,
         openMenu: {
           '1': '<span style="display:inline-block; height: .6rem; line-height: .6rem;">开票</span>',
-          '2': '<span style="display:inline-block; height: .6rem; line-height: .6rem;">不开票</span>'
+          '2': '<span style="display:inline-block; height: .6rem; line-height: .6rem;">不开票</span>',
+          '4': '<span style="display:inline-block; height: .6rem; line-height: .6rem;">其他</span>'
         },
         typeMenu: {
           1: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">快递</span>',
@@ -175,8 +178,8 @@
           return '开票'
         } else if (this.form.invoice === '2') {
           return '不开票'
-        } else {
-          return '服务费'
+        } else if (this.form.invoice === '4') {
+          return '其他'
         }
       },
       typeMsg () {
@@ -191,23 +194,28 @@
         }
       },
       money () {
-        let tax = 0
-        if (this.info.account_type === 1) {
-          tax = 0.25
-          if (!isNaN(this.form.total) && this.form.total) {
-            return (parseFloat(this.form.total) * tax).toFixed(2)
-          } else {
-            return 0
-          }
+        let tax = this.info.proportion / 100
+        // if (this.info.account_type === 1) {
+        //   tax = 0.25
+        //   if (!isNaN(this.form.total) && this.form.total) {
+        //     return (parseFloat(this.form.total) * tax).toFixed(2)
+        //   } else {
+        //     return 0
+        //   }
+        // } else {
+        //   if (this.form.invoice === '2') {
+        //     tax = 0.2
+        //   }
+        //   if (!isNaN(this.form.total) && this.form.total) {
+        //     return (parseFloat(this.form.total) * tax).toFixed(2)
+        //   } else {
+        //     return 0
+        //   }
+        // }
+        if (!isNaN(this.form.total) && this.form.total) {
+          return (parseFloat(this.form.total) * tax).toFixed(2)
         } else {
-          if (this.form.invoice === '2') {
-            tax = 0.2
-          }
-          if (!isNaN(this.form.total) && this.form.total) {
-            return (parseFloat(this.form.total) * tax).toFixed(2)
-          } else {
-            return 0
-          }
+          return 0
         }
       },
       realMoney () {
@@ -358,6 +366,12 @@
   }
   .btn-wrap{
     padding: 0.3rem;
+    .text{
+      font-size: 0.26rem;
+      color: #2d2d2d;
+      margin-top: 0.2rem;
+      text-align: center;
+    }
   }
   .record{
     .apply-title{

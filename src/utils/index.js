@@ -43,6 +43,10 @@ Date.prototype.format = function () {
 
 export const listTime = (begin, end) => {
   let arr = []
+  if (begin === end) {
+    arr.push(new Date(begin).getTime().format())
+    return arr
+  }
   let ab = begin.split('-')
   let ae = end.split('-')
   let db = new Date()

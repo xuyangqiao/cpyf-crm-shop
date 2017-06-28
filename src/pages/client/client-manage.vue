@@ -1,13 +1,13 @@
 <template>
-<div class="container">
-  <div class="header">
-    <tab v-model="selected">
-      <tab-item @on-item-click="onItemClick(1)">全部患者</tab-item>
-      <tab-item @on-item-click="onItemClick(2)">已核算患者</tab-item>
-    </tab>
+  <div class="container">
+    <div class="header">
+      <tab v-model="selected">
+        <tab-item @on-item-click="onItemClick(1)">全部患者</tab-item>
+        <tab-item @on-item-click="onItemClick(2)" v-if="$store.state.userDefault.level !== 5">已核算患者</tab-item>
+      </tab>
+    </div>
+    <router-view></router-view>
   </div>
-  <router-view></router-view>
-</div>
 </template>
 
 <script>

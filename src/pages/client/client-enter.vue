@@ -2,7 +2,7 @@
   <div class="container">
     <div class="client-form">
       <group gutter='0'>
-        <x-input v-model="form.name" placeholder="请输入客户姓名" text-align='right'>
+        <x-input v-model="form.name" placeholder="请输入患者姓名" text-align='right'>
           <div slot="label" class="label-title">
             <span class="red">*</span>
             <span>姓 名：</span>
@@ -16,7 +16,7 @@
           <span class="sex-text" @click='sexShow = true'>{{sexMsg}}</span>
         </group>
         <group gutter='0'>
-          <x-input v-model="form.age" placeholder="请输入客户年龄" text-align='right' keyboard="number">
+          <x-input v-model="form.age" placeholder="请输入患者年龄" text-align='right' keyboard="number">
             <div slot="label" class="label-title">
               <span>年 龄：</span>
             </div>
@@ -66,6 +66,7 @@
         fetchIng: false,
         sexShow: false,
         sexMenu: {
+          0: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">保密</span>',
           1: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">男</span>',
           2: '<span style="display:inline-block; height: .6rem; line-height: .6rem;">女</span>'
         },
@@ -87,7 +88,7 @@
     computed: {
       sexMsg () {
         if (this.form.sex === '0') {
-          return '请选择性别'
+          return '保密'
         } else if (this.form.sex === '1') {
           return '男'
         } else {
@@ -152,11 +153,10 @@
 
 <style lang="scss">
 .client-form{
-  margin-top: 0.3rem;
   padding: 0 0.3rem;
   background: #fff;
   .weui-cells{
-    height: 0.88rem;
+    min-height: 0.88rem;
     line-height: 0.88rem;
     .sex-text{
       float: right;

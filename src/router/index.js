@@ -8,11 +8,43 @@ export default new Router({
     {
       path: '/',
       component: function (resolve) {
-        require(['./../pages/client/client-enter.vue'], resolve)
+        require(['./../pages/client/client-index.vue'], resolve)
       },
       meta: {
         title: '录入推荐患者',
         footerSelect: 0
+      },
+      children: [
+        {
+          path: '/',
+          component: function (resolve) {
+            require(['./../pages/client/client-enter.vue'], resolve)
+          },
+          meta: {
+            title: '录入推荐患者',
+            footerSelect: 0
+          }
+        },
+        {
+          path: '/clientapply',
+          component: function (resolve) {
+            require(['./../pages/client/client-apply.vue'], resolve)
+          },
+          meta: {
+            title: '帮助患者预约',
+            footerSelect: 0
+          }
+        }
+      ]
+    },
+    {
+      path: '/clientapplysuccess',
+      component: function (resolve) {
+        require(['./../pages/client/client-applysuccess.vue'], resolve)
+      },
+      meta: {
+        title: '预约成功',
+        footerSelect: 1
       }
     },
     {
@@ -118,6 +150,16 @@ export default new Router({
       }
     },
     {
+      path: '/skill',
+      component: function (resolve) {
+        require(['./../pages/user/user-shareskill.vue'], resolve)
+      },
+      meta: {
+        title: '分享技巧',
+        footerSelect: 2
+      }
+    },
+    {
       path: '/share',
       component: function (resolve) {
         require(['./../pages/user/user-share.vue'], resolve)
@@ -138,12 +180,12 @@ export default new Router({
           }
         },
         {
-          path: '/doctorlist',
+          path: '/poster',
           component: function (resolve) {
-            require(['./../pages/doctor/doctor-list.vue'], resolve)
+            require(['./../pages/user/user-poster.vue'], resolve)
           },
           meta: {
-            title: '专家团队',
+            title: '分享海报',
             footerSelect: 2
           }
         }
@@ -176,6 +218,16 @@ export default new Router({
       },
       meta: {
         title: '申请提现',
+        footerSelect: 3
+      }
+    },
+    {
+      path: '/friend',
+      component: function (resolve) {
+        require(['./../pages/share/share-friend.vue'], resolve)
+      },
+      meta: {
+        title: '我的好友',
         footerSelect: 3
       }
     }
