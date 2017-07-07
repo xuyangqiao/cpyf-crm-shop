@@ -19,7 +19,8 @@ Vue.use(infiniteScroll)
 
 Vue.config.productionTip = false
 
-import { ToastPlugin, WechatPlugin } from 'vux'
+import { ToastPlugin, WechatPlugin, LoadingPlugin } from 'vux'
+Vue.use(LoadingPlugin)
 Vue.use(ToastPlugin)
 Vue.use(WechatPlugin)
 

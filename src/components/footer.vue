@@ -1,16 +1,16 @@
 <template>
-  <tabbar v-model="footerSelect" v-show="footerShow">
-    <tabbar-item link="/">
+  <tabbar v-model="footerSelect" v-show="footerShow" v-if="userDefault && (userDefault.menu || userDefault.MenuList.login)">
+    <tabbar-item link="/" v-if="userDefault.menu || userDefault.MenuList.write_customer || userDefault.MenuList.help_reserve">
       <img class="default" slot="icon" src="../assets/images/icon/footer-enter.png">
       <img class="active" slot="icon" src="../assets/images/icon/footer-enter-active.png">
       <span slot="label">录入</span>
     </tabbar-item>
-    <tabbar-item link="/not">
+    <tabbar-item link="/not" v-if="userDefault.menu || userDefault.MenuList.customer">
       <img class="default" slot="icon" src="../assets/images/icon/footer-client.png">
       <img class="active" slot="icon" src="../assets/images/icon/footer-client-active.png">
-      <span slot="label">患者</span>
+      <span slot="label">客户</span>
     </tabbar-item>
-    <tabbar-item link="/poster">
+    <tabbar-item link="/poster" v-if="userDefault.menu || userDefault.MenuList.poster">
       <img class="default" slot="icon" src="../assets/images/icon/footer-share.png">
       <img class="active" slot="icon" src="../assets/images/icon/footer-share-active.png">
       <span slot="label">分享</span>
@@ -38,6 +38,9 @@
       },
       footerShow () {
         return this.$store.state.footerShow
+      },
+      userDefault () {
+        return this.$store.state.userDefault
       }
     }
   }

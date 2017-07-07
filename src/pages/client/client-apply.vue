@@ -17,7 +17,7 @@
     </div>
     <div class="client-form">
       <group gutter='0'>
-        <x-input v-model="form.name" placeholder="请输入患者姓名" text-align='right'>
+        <x-input v-model="form.name" placeholder="请输入客户姓名" text-align='right'>
           <div slot="label" class="label-title">
             <span class="red">*</span>
             <span>姓 名：</span>
@@ -70,7 +70,7 @@
         <span class="sex-text" @click='timeShow = true'>{{applyTimeMsg}}</span>
       </group>
       <group gutter='0'>
-        <x-textarea title="备注：" v-model="form.desc" :height='150'></x-textarea>
+        <x-textarea title="备注：" v-model="form.desc" :height='70' autosize></x-textarea>
       </group>
     </div>
 
@@ -108,7 +108,8 @@ export default {
         reserves_type_id: '1',
         reserve_time: '',
         doctor_id: '',
-        desc: ''
+        desc: '',
+        write_type: 8
       },
       keyword: '',
       searchList: [],
@@ -298,6 +299,9 @@ export default {
         this.toast('请选择预约时段')
         return
       }
+      this.$vux.loading.show({
+        text: '提交中'
+      })
       const {data: {code, msg}} = await api.post('/Index/Reserve/ReservePost', this.form)
       if (code === 200) {
         this.$router.push('/clientapplysuccess')
@@ -363,7 +367,8 @@ export default {
       text-align: right;
     }
     .weui-textarea{
-      padding: 0;
+      padding: 0.2rem 0 0 0;
+      line-height: 1.5em;
     }
   }
   .vux-popup-picker-placeholder{

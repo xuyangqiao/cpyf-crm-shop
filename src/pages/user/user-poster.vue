@@ -4,15 +4,20 @@
     <img :src="poster.img" class="poster-img">
 
     <div class="btn-wrap">
-      <div class="change-btn" @click='getPic(true)'>换一张</div>
+      <!--<div class="change-btn" @click='getPic(true)'>换一张</div>-->
+      <x-button action-type='button' @click.native='getPic(true)' mini>换一张</x-button>
       <router-link :to='{path: "skill"}' class="skill-link">分享技巧 ></router-link>
     </div>
   </div>  
 </template>
 
 <script>
+import {XButton} from 'vux'
 import api from '@/api'
 export default {
+  components: {
+    XButton
+  },
   data () {
     return {
       tipShow: true,
@@ -32,14 +37,12 @@ export default {
       }
       const {data: {code, data}} = await api.get('/Index/Qrcode/poster', obj)
       if (code === 200) {
+        if (data.length <= 0) {
+          return
+        }
         this.poster = data
       }
     }
-  },
-  mounted () {
-    setTimeout(() => {
-      this.tipShow = false
-    }, 5000)
   }
 }
 </script>
@@ -47,7 +50,6 @@ export default {
 <style lang="scss" scoped>
   .container{
     position: relative;
-    background-color: #09bb07;
     flex: 1;
     text-align: center;
     .top-tips{
@@ -64,12 +66,15 @@ export default {
     }
   }
   .poster-img{
-    margin: 1rem auto 0;
-    width: 50%;
+    // margin: 1rem auto 0;
+    width: 100%;
   }
 
   .btn-wrap{
-    margin: .4rem auto;
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
     .change-btn{
       margin: 0 auto;
@@ -77,14 +82,19 @@ export default {
       height: 0.7rem;
       color: #ffffff;
       font-size: 0.3rem;
-      border: 1px solid #ffffff;
+      border: 1px solid #09bb07;
       border-radius: 3px;
       line-height: 0.7rem;
       text-align: center;
+      background-color: #09bb07;
     }
     .skill-link{
-      color: #2d2d2d;
+      display: block;
+      margin-top: 0.3rem;
       font-size: 0.28rem;
+      padding: 0.1rem;
+      color: #fff;
+      background: rgba(0, 0, 0, .6);
     }
   }
 </style>

@@ -27,11 +27,11 @@
     </div>-->
 
     <div class="btn-wrap">
-      <div class="delete-btn" @click='goEdit'>编辑患者信息</div>
+      <div class="delete-btn" @click='goEdit'>编辑客户信息</div>
     </div>
 
     <div v-transfer-dom>
-      <confirm class="deleteMask" v-model="deleteShow" title="确认删除患者信息吗？" @on-confirm="sureDelete">
+      <confirm class="deleteMask" v-model="deleteShow" title="确认删除客户信息吗？" @on-confirm="sureDelete">
         <p style="text-align:center; margin-top: 0.2rem;">删除后将无法恢复！</p>
       </confirm>
     </div>

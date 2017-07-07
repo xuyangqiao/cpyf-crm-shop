@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="userDefault">
     <div class="header">
       <tab v-model="selected">
-        <tab-item @on-item-click="onItemClick(1)">录入推荐患者</tab-item>
-        <tab-item @on-item-click="onItemClick(2)">帮助患者预约</tab-item>
+        <tab-item @on-item-click="onItemClick(1)" v-if="userDefault.menu || userDefault.MenuList.write_customer">录入推荐客户</tab-item>
+        <tab-item @on-item-click="onItemClick(2)" v-if="userDefault.menu || userDefault.MenuList.help_reserve">帮助客户预约</tab-item>
       </tab>
     </div>
     <router-view></router-view>
@@ -19,16 +19,22 @@ export default {
   },
   data () {
     return {
-      tabSelect: -1
+      tabSelect: 0
     }
   },
   computed: {
     selected () {
+      if (!this.userDefault.MenuList.help_reserve || !this.userDefault.MenuList.write_customer) {
+        return 0
+      }
       if (location.hash.split('?')[0] === '#/') {
         return 0
       } else {
         return 1
       }
+    },
+    userDefault () {
+      return this.$store.state.userDefault
     }
   },
   methods: {

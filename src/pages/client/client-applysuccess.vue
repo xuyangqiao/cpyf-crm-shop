@@ -3,10 +3,10 @@
     <div class="content vux-1px-b">
       <div class="logo"></div>
       <h1 class="title">预约成功</h1>
-      <p class="msg">川派医方馆会通过短信告知患者就诊相关事项。如需查询就诊情况，请联系客服。</p>
+      <p class="msg">川派医方馆会通过短信告知客户就诊相关事项。如需查询就诊情况，请联系客服。</p>
       <p class="mobile"><strong>客服电话：</strong>18113022015</p>
 
-      <x-button action-type='button' @click.native='$router.push("/not")'>查看患者列表</x-button>
+      <x-button action-type='button' @click.native='lookList'>查看客户列表</x-button>
 
     </div>
 
@@ -34,6 +34,20 @@
     },
     created () {
       this.$store.commit('footerShow', false)
+    },
+    computed: {
+      userDefault () {
+        return this.$store.state.userDefault
+      }
+    },
+    methods: {
+      lookList () {
+        if (this.userDefault.MenuList.customer) {
+          this.$router.push('/not')
+        } else {
+          this.$router.push('/user')
+        }
+      }
     },
     mounted () {
       this.$wechat.ready(() => {

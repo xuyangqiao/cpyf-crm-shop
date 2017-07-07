@@ -11,7 +11,7 @@ export default new Router({
         require(['./../pages/client/client-index.vue'], resolve)
       },
       meta: {
-        title: '录入推荐患者',
+        title: '录入推荐客户',
         footerSelect: 0
       },
       children: [
@@ -21,7 +21,7 @@ export default new Router({
             require(['./../pages/client/client-enter.vue'], resolve)
           },
           meta: {
-            title: '录入推荐患者',
+            title: '录入推荐客户',
             footerSelect: 0
           }
         },
@@ -31,7 +31,7 @@ export default new Router({
             require(['./../pages/client/client-apply.vue'], resolve)
           },
           meta: {
-            title: '帮助患者预约',
+            title: '帮助客户预约',
             footerSelect: 0
           }
         }
@@ -53,7 +53,7 @@ export default new Router({
         require(['./../pages/client/client-manage.vue'], resolve)
       },
       meta: {
-        title: '患者管理',
+        title: '客户管理',
         footerSelect: 1
       },
       children: [
@@ -63,7 +63,7 @@ export default new Router({
             require(['./../pages/client/client-not.vue'], resolve)
           },
           meta: {
-            title: '全部患者',
+            title: '全部客户',
             footerSelect: 1
           }
         },
@@ -73,7 +73,7 @@ export default new Router({
             require(['./../pages/client/client-already.vue'], resolve)
           },
           meta: {
-            title: '已就诊患者',
+            title: '已就诊客户',
             footerSelect: 1
           }
         }
@@ -85,7 +85,7 @@ export default new Router({
         require(['./../pages/client/client-info.vue'], resolve)
       },
       meta: {
-        title: '患者详情',
+        title: '客户详情',
         footerSelect: 1
       }
     },

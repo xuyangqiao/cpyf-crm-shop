@@ -5,10 +5,7 @@ Vue.use(Vuex)
 
 const state = {
   footerSelect: 0,
-  userDefault: {
-    agentId: '',
-    name: ''
-  },
+  userDefault: '',
   footerShow: true
 }
 

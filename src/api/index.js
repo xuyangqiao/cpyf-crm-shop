@@ -2,6 +2,7 @@
 import axios from 'axios'
 import config from './api-config'
 import qs from 'qs'
+import Vue from 'vue'
 // import { cookie } from 'vux'
 
 // axios.defaults.baseURL = '/index.php'
@@ -26,6 +27,7 @@ import qs from 'qs'
 // })
 
 axios.interceptors.response.use(response => {
+  Vue.$vux.loading.hide()
   return response
 }, error => {
   // 把错误信息扶正, 后面就不需要写 catch了

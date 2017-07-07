@@ -253,6 +253,9 @@
         }
       },
       async applyMoney () {
+        this.$vux.loading.show({
+          text: '提交中'
+        })
         const {data: {code, msg}} = await api.post('/Index/Apply/add', this.form)
         if (code === 200) {
           this.toast('申请成功')

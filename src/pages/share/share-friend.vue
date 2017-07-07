@@ -2,42 +2,43 @@
   <div class="container" v-infinite-scroll="fetchData" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
     <div class="top-bar">
       <div class="top-left">
-        <span class="title-item">好友：54人</span>
-        <span class="title-item">推荐：12人</span>
+        <span class="title-item">好友：{{friendCount}}人</span>
+        <span class="title-item">推荐：{{shareCount}}人</span>
       </div>
-      <div class="top-right">全部好友 <x-icon type="ios-arrow-down" size="20"></x-icon></div>
+      <div class="top-right" @click='checkType'>{{friendMsg}} <x-icon type="ios-arrow-down" size="20"></x-icon></div>
     </div>
-    <!--<div class="friend-list">
-      <div class="friend-item" v-for="i in 3">
+    <div class="friend-list">
+      <div class="friend-item" v-for="(item, index) in list" :key='item.id'>
         <div class="avatar">
-          <img src="">
+          <img :src="item.avatar || item.edit_avatar">
         </div>
         <div class="friend-content">
           <div class="name-line">
-            <span class="name">张三丰</span>
-            <span class="up">推荐32人</span>
+            <span class="name">{{item.truename || item.wechat_name}}</span>
+            <span class="up">推荐{{item.shareid_count}}人</span>
           </div>
-          <div class="time-line">2017.06.26  13：21：40</div>
+          <div class="time-line">{{item.create_time}}</div>
         </div>
         <div class="friend-btn">
-          <div class="attention">+ 关注</div>
-          <div class="attention active">已关注</div>
+          <div class="attention" v-if="item.concern === 0" @click='concern(item.id, index)'>+ 关注</div>
+          <div class="attention active" v-else @click='cancel(item.id, index)'>已关注</div>
         </div>
       </div>
-    </div>-->
+    </div>
     <div v-if="list.length > 0">
       <load-more v-if="isLoading" :show-loading="true" tip='正在加载' background-color="#e7e7e7"></load-more>
       <load-more v-if="!isLoading" :show-loading="false" tip='暂无更多数据' background-color="#e7e7e7"></load-more>
     </div>
     <div class="no-friend" v-if="list.length <= 0">
       <img src="../../assets/images/no-friend.png">
-      <p class="title">您还没有关联好友哦~</p>
+      <p class="title">{{nofriendMsg}}</p>
     </div>
   </div>
 </template>
 
 <script>
 import { LoadMore } from 'vux'
+import api from '@/api'
 
 export default {
   components: {
@@ -45,10 +46,13 @@ export default {
   },
   data () {
     return {
+      friendType: true,
       busy: true,
       page: 0,
       isLoading: false,
-      list: []
+      list: [],
+      friendCount: '',
+      shareCount: ''
     }
   },
   computed: {
@@ -56,14 +60,66 @@ export default {
       return {
         page: this.page + 1
       }
+    },
+    friendMsg () {
+      if (this.friendType) {
+        return '全部好友'
+      } else {
+        return '关注好友'
+      }
+    },
+    nofriendMsg () {
+      if (this.friendType) {
+        return '您暂时还没有关联好友哦~'
+      } else {
+        return '您暂时还没有已关注好友哦~'
+      }
     }
   },
   created () {
     this.fetchData()
   },
   methods: {
-    fetchData () {
-      console.log(1111)
+    async fetchData () {
+      this.busy = true   // 禁止加载，防止重复请求
+      this.isLoading = true  // 开始加载动画
+      let option = this.nextPage
+      if (!this.friendType) {
+        option = Object.assign(this.nextPage, {concern: 1})
+      }
+      const {data: {code, data}} = await api.get('/Index/Sharelist/lists', option)
+      if (code === 200) {
+        this.page ++
+        this.friendCount = data.friend_count
+        this.shareCount = data.share_count_all
+        this.list = this.list.concat(data.list)
+        if (data.list.length < 20) {
+          this.isLoading = false
+          return
+        }
+        this.busy = false
+      }
+    },
+    checkType () {
+      this.friendType = !this.friendType
+      this.busy = false
+      this.list = []
+      this.page = 0
+      this.fetchData()
+    },
+    async concern (id, index) {
+      const {data: {code}} = await api.get('/Index/Sharelist/concern', {id: id})
+      if (code === 200) {
+        this.list[index].concern = 1
+        this.toast('关注成功')
+      }
+    },
+    async cancel (id, index) {
+      const {data: {code}} = await api.get('/Index/Sharelist/ConcernDel', {id: id})
+      if (code === 200) {
+        this.list[index].concern = 0
+        this.toast('取消关注成功')
+      }
     }
   }
 }
@@ -116,6 +172,10 @@ export default {
         color: #393939;
         .name-line{
           margin-bottom: 0.14rem;
+          .name{
+            display: inline-block;
+            min-width: 5em;
+          }
         }
         .time-line{
           color: #a3a3a3;

@@ -13,11 +13,11 @@
       <div class="user-count" v-if="$store.state.userDefault.level !== 5">
         <router-link to='/not' tag='div' class="count-item vux-1px-r">
           <h2 class="title">{{data.customer_count}}位</h2>
-          <p class="text">我的患者</p>
+          <p class="text">我的客户</p>
         </router-link>
         <router-link to='/already' tag='div' class="count-item vux-1px-r">
           <h2 class="title">{{data.already}}位</h2>
-          <p class="text">已核算患者</p>
+          <p class="text">已核算客户</p>
         </router-link>
         <!--<router-link to='/not' tag='div' class="count-item">
           <h2 class="title">3333元</h2>
@@ -31,12 +31,12 @@
 
       <!--只有业务员显示-->
       <div class="menu-group">
-        <router-link to='/not' tag='div' class="menu-item" v-if="$store.state.userDefault.level === 5">
+        <router-link to='/not' tag='div' class="menu-item" v-if="userDefault.level === 5 && (userDefault.menu || userDefault.MenuList.customer)">
           <div class="icon-wrap">
             <span class="menu-icon menu-recorde"></span>
           </div>
           <div class="item-content vux-1px-b">
-            <h1 class="title">我的患者</h1>
+            <h1 class="title">我的客户</h1>
             <div class="link">
               {{data.customer_count}}位
               <x-icon type="ios-arrow-right" size="20"></x-icon>
@@ -44,7 +44,7 @@
           </div>
         </router-link>
 
-        <router-link to='/consumer' tag='div' class="menu-item" v-if="$store.state.userDefault.level !== 5">
+        <router-link to='/consumer' tag='div' class="menu-item" v-if="userDefault.level !== 5">
           <div class="icon-wrap">
             <span class="menu-icon menu-recorde"></span>
           </div>
@@ -56,7 +56,7 @@
           </div>
         </router-link>
 
-        <router-link to='/money' tag='div' class="menu-item" v-if="$store.state.userDefault.level !== 5">
+        <router-link to='/money' tag='div' class="menu-item" v-if="userDefault.level !== 5">
           <div class="icon-wrap">
             <span class="menu-icon menu-recorde"></span>
           </div>
@@ -81,7 +81,7 @@
           </div>
         </router-link>
 
-        <!--<router-link to='/friend' tag='div' class="menu-item">
+        <router-link to='/friend' tag='div' class="menu-item" v-if="userDefault.menu || userDefault.MenuList.friend">
           <div class="icon-wrap">
             <span class="menu-icon menu-recorde"></span>
           </div>
@@ -91,7 +91,7 @@
               <x-icon type="ios-arrow-right" size="20"></x-icon>
             </div>
           </div>
-        </router-link>-->
+        </router-link>
       </div>
 
       <div class="menu-group">
@@ -106,19 +106,20 @@
             </div>
           </div>
         </div>-->
-        <a :href='url' class="menu-item">
-          <div class="icon-wrap">
-            <span class="menu-icon menu-recorde"></span>
-          </div>
-          <div class="item-content vux-1px-b">
-            <h1 class="title">在线预约</h1>
-            <div class="link">
-              <x-icon type="ios-arrow-right" size="20"></x-icon>
+        <div>
+          <a :href='url' class="menu-item">
+            <div class="icon-wrap">
+              <span class="menu-icon menu-recorde"></span>
             </div>
-          </div>
-        </a>
-
-        <router-link to='/share' tag='div' class="menu-item">
+            <div class="item-content vux-1px-b">
+              <h1 class="title">在线预约</h1>
+              <div class="link">
+                <x-icon type="ios-arrow-right" size="20"></x-icon>
+              </div>
+            </div>
+          </a>
+        </div>
+        <router-link to='/poster' tag='div' class="menu-item" v-if="userDefault.menu || userDefault.MenuList.poster">
           <div class="icon-wrap">
             <span class="menu-icon menu-recorde"></span>
           </div>
@@ -152,6 +153,9 @@
         } else {
           return false
         }
+      },
+      userDefault () {
+        return this.$store.state.userDefault
       }
     },
     async created () {

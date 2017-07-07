@@ -2,7 +2,7 @@
   <div class="container">
     <div class="client-form">
       <group gutter='0'>
-        <x-input v-model="form.name" placeholder="请输入患者姓名" text-align='right'>
+        <x-input v-model="form.name" placeholder="请输入客户姓名" text-align='right'>
           <div slot="label" class="label-title">
             <span class="red">*</span>
             <span>姓 名：</span>
@@ -16,7 +16,7 @@
           <span class="sex-text" @click='sexShow = true'>{{sexMsg}}</span>
         </group>
         <group gutter='0'>
-          <x-input v-model="form.age" placeholder="请输入患者年龄" text-align='right' keyboard="number">
+          <x-input v-model="form.age" placeholder="请输入客户年龄" text-align='right' keyboard="number">
             <div slot="label" class="label-title">
               <span>年 龄：</span>
             </div>
@@ -84,6 +84,16 @@
       if (code === 200) {
         this.form = data
       }
+      if (this.userDefault.menu === 1) {
+        return
+      }
+      if (!this.userDefault.MenuList.write_customer && this.userDefault.MenuList.help_reserve === 1) {
+        this.$router.replace({path: 'clientapply'})
+        return
+      }
+      if (!this.userDefault.MenuList.write_customer) {
+        this.$router.replace({path: 'user'})
+      }
     },
     computed: {
       sexMsg () {
@@ -94,6 +104,9 @@
         } else {
           return '女'
         }
+      },
+      userDefault () {
+        return this.$store.state.userDefault
       }
     },
     methods: {
@@ -121,6 +134,9 @@
           obj = Object.assign(obj, {id: this.$route.query.cid})
           url = '/Index/Write/CustomerEdit'
         }
+        this.$vux.loading.show({
+          text: '提交中'
+        })
         const {data: {code, msg}} = await api.post(url, obj)
         if (code === 200) {
           if (this.$route.query.isEdit) {

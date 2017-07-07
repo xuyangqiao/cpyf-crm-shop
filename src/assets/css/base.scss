@@ -33,3 +33,15 @@
 .weui-loadmore_line {
   border-top: 1px solid #e0e0e0 !important;
 }
+
+.weui-loading_toast{
+  .weui-toast{
+    height: 100vh;
+    top: 0;
+    padding-top: 50%;
+  }
+}
+
+button {
+  user-select: none;  
+}

@@ -25,6 +25,11 @@
         <datetime v-model="form.end_time" title="合作结束时间：" :min-year='2000' :max-year='2018' clear-text="结束时间" confirm-text="确认" cancel-text="取消"></datetime>
       </group>-->
     </div>
+
+    <div class="rule-wrap">
+      <checklist title="权限设置" :options="ruleList" v-model="form.menu_id"></checklist>
+    </div>
+    
     <div class="btn-wrap">
       <x-button action-type='button' @click.native='newSale' v-if="!$route.query.isEdit">提交</x-button>
       <x-button action-type='button' @click.native='editSale' v-else>提交</x-button>
@@ -45,7 +50,7 @@
 </template>
 
 <script>
-  import { Group, XInput, PopupPicker, XButton, Datetime, Confirm, TransferDomDirective as TransferDom } from 'vux'
+  import { Group, XInput, PopupPicker, XButton, Datetime, Confirm, TransferDomDirective as TransferDom, Checklist } from 'vux'
   // import { handleDay } from '@/utils'
   import api from '@/api'
   
@@ -59,7 +64,8 @@
       PopupPicker,
       XButton,
       Datetime,
-      Confirm
+      Confirm,
+      Checklist
     },
     data () {
       return {
@@ -73,9 +79,11 @@
         status: '',
         stopShow: false,
         startShow: false,
+        ruleList: [],
         form: {
           name: '',
-          mobile: ''
+          mobile: '',
+          menu_id: []
           // proportion: '',
           // start_time: '',
           // end_time: ''
@@ -115,9 +123,29 @@
       // }
       if (this.$route.query.isEdit) {
         this.fetchEdit()
+      } else {
+        this.getRule()
       }
     },
     methods: {
+      async getRule (id) {
+        let option = null
+        if (id) {
+          option = {id: id}
+        }
+        const {data: {code, data}} = await api.get('/Index/Mycenter/SaleMenu', option)
+        if (code === 200) {
+          let list = []
+          for (let i = 0; i < data.length; i++) {
+            let obj = {}
+            obj['key'] = data[i].id
+            obj['value'] = data[i].title
+            list.push(obj)
+            this.form.menu_id.push(data[i].id)
+          }
+          this.ruleList = list
+        }
+      },
       async newSale () {
         const myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/
         if (this.form.name === '') {
@@ -134,6 +162,9 @@
         //   this.toast('请选择提成比例')
         //   return
         // }
+        this.$vux.loading.show({
+          text: '提交中'
+        })
         const {data: {code, msg}} = await api.post('/Index/Mycenter/AddCustomer', this.form)
         if (code === 200) {
           this.toast('添加成功')
@@ -143,7 +174,7 @@
         }
       },
       async fetchEdit () {
-        const {data: {code, data}} = await api.get('/Index/Mycenter/EditCustomer', {id: this.$route.query.sid})
+        const {data: {code, data, SaleMenu}} = await api.get('/Index/Mycenter/EditCustomer', {id: this.$route.query.sid})
         if (code === 200 && data) {
           this.form.name = data.name
           this.form.mobile = data.mobile
@@ -152,10 +183,24 @@
           // this.form.end_time = data.end_time
           this.editId = data.id
           this.status = data.user_status
+          let list = []
+          for (let i = 0; i < SaleMenu.length; i++) {
+            let obj = {}
+            obj['key'] = SaleMenu[i].id
+            obj['value'] = SaleMenu[i].title
+            list.push(obj)
+            if (SaleMenu[i].check === 'checked') {
+              this.form.menu_id.push(SaleMenu[i].id)
+            }
+          }
+          this.ruleList = list
         }
       },
       async editSale () {
         const option = Object.assign(this.form, {id: this.editId})
+        this.$vux.loading.show({
+          text: '提交中'
+        })
         const {data: {code, msg}} = await api.post('/Index/Mycenter/EditCustomer', option)
         if (code === 200) {
           this.toast('编辑成功')
