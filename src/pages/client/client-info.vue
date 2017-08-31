@@ -6,12 +6,12 @@
         <span class="mobile">{{data.mobile}}</span>
         <span class="card" v-if="data.card_number">{{ data.card_number | cardFilter }}</span>
       </div>
-      <div class="client-sale">
+      <!-- <div class="client-sale">
         <div class="sale-item">
           <span class="sale price" v-if="$store.state.userDefault.level !== 5">消费总计：<span class="red">{{data.total}}</span>元</span>
           <span class="sale-time">添加：{{data.customer_time}}</span>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!--就诊详情-->

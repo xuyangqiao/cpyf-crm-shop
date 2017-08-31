@@ -1,83 +1,100 @@
 <template>
   <div class="container">
-    <div class="wrap">
-      <img :src="codeUrl" type="img" class="code"></img>
-      <h2 class="title">推广二维码</h2>
-      <a :href='jumpUrl' class="text-title">点击进入推广页面，将页面分享给朋友即可。</a>
-      <p class="desc">长按保存，即可发布朋友圈</p>
+    <div class="top-tips" v-show="tipShow">长按保存海报，即可在朋友圈、微信群分享推广哦~</div>
+    <img :src="poster.img" class="poster-img">
+
+    <div class="btn-wrap">
+      <!--<div class="change-btn" @click='getPic(true)'>换一张</div>-->
+      <x-button action-type='button' @click.native='getPic(true)' mini>换一张</x-button>
+      <router-link :to='{path: "skill"}' class="skill-link">分享技巧 ></router-link>
     </div>
-  </div>
+  </div>  
 </template>
 
 <script>
-  import api from '@/api'
-  export default {
-    data () {
-      return {
-        codeUrl: '',
-        jumpUrl: ''
-      }
-    },
-    created () {
-      this.fetchData()
-    },
-    methods: {
-      async fetchData () {
-        const {data: {code, data, msg}} = await api.get('/Index/Qrcode/livecode')
-        if (code === 200) {
-          this.codeUrl = data.img
-          this.jumpUrl = data.jump_link
-        } else {
-          this.toast(msg)
+import {XButton} from 'vux'
+import api from '@/api'
+export default {
+  components: {
+    XButton
+  },
+  data () {
+    return {
+      tipShow: true,
+      poster: ''
+    }
+  },
+  created () {
+    this.getPic()
+  },
+  methods: {
+    async getPic (flag) {
+      let obj = null
+      if (flag) {
+        obj = {
+          id: this.poster.id
         }
       }
-    },
-    mounted () {
-      this.$wechat.ready(() => {
-        this.wechatShare({
-          title: '川派医方馆疼痛专家可以在线预约啦！',
-          link: '/doctorlist',
-          img: 'http://qpic.cn/6oICaLv7r',
-          desc: '川派医方馆，专治头颈肩腰四肢关节疼痛！'
-        })
-      })
+      const {data: {code, data}} = await api.get('/Index/Qrcode/WechatPoster', obj)
+      if (code === 200) {
+        if (data.length <= 0) {
+          return
+        }
+        this.poster = data
+      }
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
   .container{
+    position: relative;
     flex: 1;
-    background: #f9f9f9;
-  }
-  .wrap{
     text-align: center;
-    .title{
-      color: #3f3f3f;
+    .top-tips{
+      position: absolute;
+      z-index: 100;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, .6);
+      height: 0.5rem;
+      font-size: 0.22rem;
+      color: #262626;
+      text-align: center;
+      line-height: 0.5rem;
+    }
+  }
+  .poster-img{
+    // margin: 1rem auto 0;
+    width: 100%;
+  }
+
+  .btn-wrap{
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    .change-btn{
+      margin: 0 auto;
+      width: 1.8rem;
+      height: 0.7rem;
+      color: #ffffff;
+      font-size: 0.3rem;
+      border: 1px solid #09bb07;
+      border-radius: 3px;
+      line-height: 0.7rem;
+      text-align: center;
+      background-color: #09bb07;
+    }
+    .skill-link{
+      display: block;
+      margin-top: 0.3rem;
       font-size: 0.28rem;
-      margin: 0.24rem 0 0.1rem;
+      padding: 0.1rem;
+      color: #fff;
+      background: rgba(0, 0, 0, .6);
     }
-    .desc{
-      color: #000;
-      font-size: .22rem;
-      background: #f0f0f0;
-      padding: 0.2rem;
-      margin-top: 0.2rem;
-    }
-    .code{
-      margin-top: 2rem;
-      img{
-        width: 2.2rem;
-        height: 2.2rem;
-        margin-bottom: .1rem;
-      }
-    }
-  }
-  .text-title{
-    color: #09bb07;
-    font-size: 0.26rem;
-    margin-top: 0.22rem;
-    text-align: center;
-    display: block;
   }
 </style>

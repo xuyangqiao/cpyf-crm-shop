@@ -1,9 +1,9 @@
 <template>
 <div class="share-wrap">
   <div class="header">
-    <tab v-model="selected" :line-width='0'>
+    <tab v-model="selected">
       <tab-item @on-item-click="onItemClick(1)">分享海报</tab-item>
-      <!--<tab-item @on-item-click="onItemClick(2)">推广二维码</tab-item>-->
+      <tab-item @on-item-click="onItemClick(2)">公众号海报</tab-item>
     </tab>
   </div>
   <router-view></router-view>
@@ -75,21 +75,21 @@
         line-height: 1.06rem;
       }
     }
-    // .vux-tab-ink-bar{
-    //   &:after{
-    //     content: '';
-    //     display: block;
-    //     position: absolute;
-    //     z-index: 2;
-    //     top: 0px;
-    //     left: 50%;
-    //     transform: translateX(-50%);
-    //     width: 0;
-    //     height: 0;
-    //     border-left: 7px solid transparent;
-    //     border-right: 7px solid transparent;
-    //     border-top: 7px solid #09bb07;
-    //   }
-    // }
+    .vux-tab-ink-bar{
+      &:after{
+        content: '';
+        display: block;
+        position: absolute;
+        z-index: 2;
+        top: 0px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-top: 7px solid #09bb07;
+      }
+    }
   }
 </style>

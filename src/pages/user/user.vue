@@ -44,7 +44,7 @@
           </div>
         </router-link>
 
-        <router-link to='/consumer' tag='div' class="menu-item" v-if="userDefault.level !== 5">
+        <!-- <router-link to='/consumer' tag='div' class="menu-item" v-if="userDefault.level !== 5">
           <div class="icon-wrap">
             <span class="menu-icon menu-recorde"></span>
           </div>
@@ -66,7 +66,7 @@
               <x-icon type="ios-arrow-right" size="20"></x-icon>
             </div>
           </div>
-        </router-link>
+        </router-link> -->
 
         <router-link to='/sale' tag='div' class="menu-item" v-if="saleCheck">
           <div class="icon-wrap">

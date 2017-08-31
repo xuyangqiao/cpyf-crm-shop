@@ -32,12 +32,12 @@
         </div>
       </div>
 
-      <div class="apply-title">
+      <!-- <div class="apply-title">
         <h2 class="title">提现申请</h2>
-      </div>
+      </div> -->
     </div>
 
-    <div class="apply-form" v-if="info">
+    <!-- <div class="apply-form" v-if="info">
       <group gutter='0'>
         <x-input v-model.lazy="form.total" placeholder="请输入申请提现金额" text-align='right' type='number' @on-blur='changeMoney'>
           <div slot="label" class="label-title">
@@ -50,7 +50,8 @@
         <span class="title"><span class="red">*</span> 是否开票：</span>
         <span class="sex-text" @click='openShow = true'>{{openMsg}} <span class="arr"></span></span>
       </group>
-      <!--开票选项-->
+
+      
       <div v-if='form.invoice === "1"'>
         <group gutter='0'>
           <span class="title"><span class="red">*</span> 发票寄送方式：</span>
@@ -101,7 +102,7 @@
     <div class="btn-wrap">
       <x-button action-type='button' @click.native='applyMoney'>申 请</x-button>
       <p class="text" v-show="form.invoice === '2'">系统将按照{{info.proportion}}%代扣税款，税后所得，心安理得。</p>
-    </div>
+    </div> -->
 
     <div class="record">
       <div class="apply-title">

@@ -175,7 +175,7 @@ export default new Router({
             require(['./../pages/user/user-doctorcode.vue'], resolve)
           },
           meta: {
-            title: '推广二维码',
+            title: '公众号海报',
             footerSelect: 2
           }
         },
